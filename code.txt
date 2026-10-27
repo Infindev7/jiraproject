@@ -1,0 +1,187 @@
+MDM Practical — Question Bank Solutions (Experiments 1–7)
+All 7 questions solved and executed where code applies. Q1 is a study table; Q7 is Packet Tracer steps.
+Q1. Experiment 1 – Wireless Frequency Bands (Case Study)
+Prepare a comparative study table of any five wireless communication technologies with their operating 
+frequency bands, range, and real-world applications. Write your observations and final result.
+Technology Operating Frequency 
+Band
+Range Real-World Applications
+Wi-Fi (IEEE 802.11) 2.4 GHz and 5 GHz (6 GHz 
+in Wi-Fi 6E)
+Up to ~100 m outdoors, ~30
+m indoors
+Home/office internet, 
+hotspots, campus networks
+Bluetooth 2.4 GHz ~10 m (Class 2) Headphones, wearables, 
+keyboards, file sharing
+Zigbee (IEEE 802.15.4) 2.4 GHz (also 868 MHz / 
+915 MHz)
+10–100 m Home automation, sensor 
+networks, smart meters
+NFC 13.56 MHz ~4 cm Contactless payments, 
+access cards, tap-to-pair
+Cellular 5G Sub-6 GHz and mmWave 
+24–40 GHz
+Sub-6: several km; 
+mmWave: ~200–300 m
+Mobile broadband, IoT, 
+smart cities
+Observations: Higher frequency gives higher data rates but shorter range and poorer wall penetration; lower 
+frequency travels farther but carries less data. Very short range (NFC) trades coverage for security and simplicity. 
+No single technology fits every need — the choice is a trade-off between range, data rate, power and mobility.
+Result: Wi-Fi suits local high-speed access, cellular suits wide-area mobility, Zigbee suits low-power sensors, 
+Bluetooth suits personal devices, and NFC suits tap-and-go use. The right technology is picked by matching 
+range, speed and power needs to the application.
+Answer: Five technologies compared on band, range and use; the trade-off (frequency vs range vs data 
+rate) is the observation examiners ask about. 
+
+Q2. Experiment 2 – Basic Communication System Using Python
+Simulate a basic digital communication system (Transmitter, Channel with Noise, Receiver) using Python and 
+evaluate bit errors. Generate binary data, introduce noise by changing bits, compare transmitted and received 
+data, display bit errors, and plot both signals.
+import numpy as np
+import matplotlib.pyplot as plt
+# Transmitter: generate 50 random binary bits
+np.random.seed(42)
+tx = np.random.randint(0, 2, 50)
+# Channel: noise flips each bit with 10% probability
+noise = np.random.rand(50) < 0.10
+rx = np.where(noise, 1 - tx, tx)
+# Receiver: compare transmitted and received bits
+errors = np.sum(tx != rx)
+ber = errors / len(tx)
+print("Transmitted:", ''.join(map(str, tx)))
+print("Received: ", ''.join(map(str, rx)))
+print(f"Bit errors: {errors} out of {len(tx)}")
+print(f"Bit Error Rate (BER): {ber:.2f}")
+# Plot both signals
+plt.figure(figsize=(10, 4))
+plt.subplot(2, 1, 1)
+plt.step(range(50), tx, where='mid')
+plt.title("Transmitted Signal")
+plt.ylim(-0.5, 1.5)
+plt.subplot(2, 1, 2)
+plt.step(range(50), rx, where='mid')
+plt.title("Received Signal (with noise)")
+plt.ylim(-0.5, 1.5)
+plt.tight_layout()
+plt.show()
+Output:
+Transmitted: 01000100010000101110101111111100111010000011111011
+Received: 01001101010010101010101111111101101010000010111111
+Bit errors: 8 out of 50
+Bit Error Rate (BER): 0.16
+Answer: 8 bit errors out of 50 → BER 0.16. The two step plots show exactly where the flipped bits sit. 
+
+Q3. Experiment 3 – Wi-Fi Network Data Analysis
+Using Python, analyze the given Wi-Fi network dataset. Identify the strongest and weakest signals based on RSSI 
+and plot a bar chart comparing all networks.
+import matplotlib.pyplot as plt
+# Given dataset
+networks = ["Network A", "Network B", "Network C", "Network D", "Network E"]
+rssi = [-45, -68, -52, -80, -38]
+# Strongest = closest to zero (max value); weakest = most negative (min value)
+strongest = networks[rssi.index(max(rssi))]
+weakest = networks[rssi.index(min(rssi))]
+print(f"Strongest signal: {strongest} ({max(rssi)} dBm)")
+print(f"Weakest signal: {weakest} ({min(rssi)} dBm)")
+# Bar chart comparing all networks
+plt.bar(networks, rssi)
+plt.ylabel("RSSI (dBm)")
+plt.title("Wi-Fi Signal Strength Comparison")
+plt.show()
+Output:
+Strongest signal: Network E (-38 dBm)
+Weakest signal: Network D (-80 dBm)
+Answer: Strongest: Network E (−38 dBm). Weakest: Network D (−80 dBm). RSSI is backwards from 
+intuition — closer to zero means stronger. 
+
+Q4. Experiment 4 – Latency Analysis
+Using Python, calculate the average, minimum, and maximum response time (RTT) from the given Ping readings. 
+Comment on the network performance.
+# Given Ping readings in ms
+ping = [20, 25, 18, 60, 27]
+avg = sum(ping) / len(ping)
+print(f"Average RTT: {avg:.1f} ms")
+print(f"Minimum RTT: {min(ping)} ms")
+print(f"Maximum RTT: {max(ping)} ms")
+Output:
+Average RTT: 30.0 ms
+Minimum RTT: 18 ms
+Maximum RTT: 60 ms
+Answer: Average 30.0 ms, minimum 18 ms, maximum 60 ms. Comment: mostly stable at 18–27 ms (good 
+for a LAN), but the 60 ms spike on packet 4 shows occasional congestion — jitter is present, overall 
+performance acceptable. 
+
+Q5. Experiment 5 – Multipath Effects Analysis
+Using Python in VS Code, plot a line graph of Position versus RSSI from the given indoor measurement data. 
+Identify the deep signal fluctuation (fade nulls) points and write your observations.
+import matplotlib.pyplot as plt
+# Given indoor measurement data
+position = [1, 2, 3, 4, 5, 6]
+rssi = [-40, -48, -42, -65, -50, -72]
+plt.plot(position, rssi, marker='o')
+plt.xlabel("Position (m)")
+plt.ylabel("RSSI (dBm)")
+plt.title("Position vs RSSI (Indoor)")
+plt.show()
+# Deep fade nulls: the sharp dips
+print("Fade nulls at 4 m (-65 dBm) and 6 m (-72 dBm)")
+Output:
+Fade nulls at 4 m (-65 dBm) and 6 m (-72 dBm)
+Answer: Fade nulls at 4 m (−65 dBm) and 6 m (−72 dBm). Key observation: the signal does NOT fall 
+smoothly — it rises from −48 at 2 m to −42 at 3 m. That wobble is multipath: reflected waves interfere 
+constructively (boost) and destructively (deep nulls). 
+
+Q6. Experiment 6 – Noise Analysis
+Using Python, generate a clean signal wave and add low and high levels of random noise. Plot and compare the 
+three signals in subplots. Explain how noise affects signal quality.
+import numpy as np
+import matplotlib.pyplot as plt
+t = np.linspace(0, 1, 500)
+clean = np.sin(2 * np.pi * 5 * t)
+np.random.seed(42)
+low_noise = clean + np.random.normal(0, 0.1, 500) # small noise
+high_noise = clean + np.random.normal(0, 0.5, 500) # large noise
+plt.figure(figsize=(10, 6))
+plt.subplot(3, 1, 1)
+plt.plot(t, clean)
+plt.title("Clean Signal")
+plt.subplot(3, 1, 2)
+plt.plot(t, low_noise)
+plt.title("Low Noise")
+plt.subplot(3, 1, 3)
+plt.plot(t, high_noise)
+plt.title("High Noise")
+plt.tight_layout()
+plt.show()
+Answer: Low noise slightly roughens the wave but its shape survives; high noise buries it — the signal-to-
+noise ratio collapses and the receiver can no longer recover the original reliably. More noise = worse signal 
+quality. 
+
+Q7. Experiment 7 – Network Simulation
+Design a Local Area Network (LAN) using Cisco Packet Tracer, configure static IP addresses, and verify 
+connectivity using the Ping command.
+Step 1 — Open Packet Tracer and build the topology.
+Open Cisco Packet Tracer → New file. From End Devices drag two PCs (PC0, PC1). From Switches drag one 
+2960 switch.
+Step 2 — Connect the devices.
+Select the copper straight-through cable. Connect PC0 FastEthernet0 → switch FastEthernet0/1, and PC1 
+FastEthernet0 → switch FastEthernet0/2. (Straight-through is used between unlike devices, PC to switch. Green 
+link lights mean the physical connection is good.)
+Step 3 — Assign static IP addresses.
+Click PC0 → Desktop tab → IP Configuration → choose Static. Enter IP Address 192.168.1.2, Subnet Mask 
+255.255.255.0. Do the same on PC1 with 192.168.1.3 and the same mask. Both PCs are now on the same network
+192.168.1.0/24.
+Step 4 — Verify connectivity with Ping.
+On PC0 open Desktop → Command Prompt and type: `ping 192.168.1.3`
+Success looks like: `Reply from 192.168.1.3: bytes=32 time<1ms TTL=128` four times, ending with `Packets: 
+Sent = 4, Received = 4, Lost = 0 (0% loss)`. Repeat from PC1 with `ping 192.168.1.2`.
+Step 5 — If it fails (troubleshooting).
+'Request timed out' means: check the cable link lights, check both IPs are on the same network, check the subnet 
+masks match, and check no two devices share an IP address.
+Optional — watch the packets.
+Switch to Simulation mode, send a ping, and watch the packet travel PC0 → switch → PC1 and back. This is 
+what the examiner wants to see: a working LAN with verified connectivity.
+Answer: Two PCs + one switch, static IPs 192.168.1.2 / 192.168.1.3 on the same /24 network, ping both ways
+with 0% loss. Packet Tracer is desktop software, so this works offline once installed.
